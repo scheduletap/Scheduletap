@@ -1,0 +1,88 @@
+openapi: 3.0.0
+info:
+  title: position
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /position/form:
+    post:
+      operationId: post-position-form
+      responses:
+        "200":
+          description: OK
+  /position/{ID}:
+    get:
+      operationId: get-business-ID
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses: {}
+      summary: Your GET endpoint
+      tags: []
+  /position/{ID}/replace:
+    put:
+      operationId: put-business-ID-replace
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Position:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        description:
+          type: string
+        businessID:
+          type: string
+        startTime:
+          format: time
+          type: string
+        shiftLength:
+          multipleOf: 15
+          type: integer
+      required:
+      - businessID
+      - id
+      - name
+      - shiftLength
+      - startTime
+      title: Position
+      type: object
+    PositionForm:
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        description:
+          type: string
+        startTime:
+          format: time
+          type: string
+        shiftLength:
+          type: integer
+      required:
+      - name
+      - shiftLength
+      - startTime
+      title: PositionFOrm
+      type: object

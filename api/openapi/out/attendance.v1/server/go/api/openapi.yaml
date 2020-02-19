@@ -1,0 +1,368 @@
+openapi: 3.0.0
+info:
+  title: attendance
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /clockin/picture/new:
+    post:
+      operationId: post-picture-new
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object'
+        content:
+          multipart/form-data:
+            schema:
+              properties:
+                file:
+                  format: binary
+                  type: string
+              type: object
+          application/json:
+            schema:
+              properties:
+                file:
+                  description: Creates a new date tagged image
+                  format: binary
+                  type: string
+              required:
+              - file
+              type: object
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+          description: Created
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+  /clockin/id/new:
+    post:
+      description: Provides a ID to a veryfied computer
+      operationId: post-clockin-id-new
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+  /clockin/id/validate/{ID}:
+    post:
+      operationId: post-clockin-id-validate
+      parameters:
+      - description: The id provided by /clockin/id/new
+        explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties: {}
+              type: object
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: Accepted
+        "400":
+          description: Bad Request
+  /clockin/gps/new:
+    post:
+      description: Create a new gps clockin, be warned this is really easy to fake
+        for anyone with moderate intellegence, we provide some basic defences but
+        this should be used with other clockin methods
+      operationId: post-clockin-gps-new
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_1'
+        content:
+          application/json:
+            schema:
+              properties:
+                X:
+                  type: number
+                Y:
+                  type: number
+                Z:
+                  type: number
+              type: object
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: Accepted
+  /clockin/biometric/new:
+    post:
+      operationId: post-clockin-biometric-new
+      requestBody:
+        $ref: '#/components/requestBodies/inline_object_2'
+        content:
+          application/json:
+            schema:
+              properties:
+                type:
+                  enum:
+                  - fingerprint
+                  - iris
+                  type: string
+                data:
+                  format: binary
+                  type: string
+              type: object
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: Accepted
+        "400":
+          description: Bad Request
+  /attendance/{businessID}/{userID}:
+    get:
+      operationId: get-attendance-businessID-userID
+      parameters:
+      - explode: false
+        in: path
+        name: businessID
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: userID
+        required: true
+        schema:
+          type: string
+        style: simple
+      - description: Length of history requested in weeks
+        explode: true
+        in: query
+        name: length
+        required: false
+        schema:
+          type: number
+        style: form
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Your GET endpoint
+      tags: []
+  /clockin/new:
+    post:
+      operationId: post-clockin-new
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+      responses:
+        "202":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClockIn'
+          description: Accepted
+        "400":
+          description: Bad Request
+        "500":
+          description: Internal Server Error
+components:
+  requestBodies:
+    inline_object_1:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_1'
+    inline_object:
+      content:
+        multipart/form-data:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object'
+    inline_object_2:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_object_2'
+  schemas:
+    ClockIn:
+      description: Represents a user proving they were in work at a specified time
+      example:
+        isAutoClockedIn: true
+        clockOutTime: 2000-01-23T04:56:07.000+00:00
+        businessID: businessID
+        id: id
+        isAutoClockedOut: true
+        userID: userID
+        ClockInProof:
+        - generatedID: generatedID
+          pictureID: pictureID
+          biometricID: biometricID
+          GPSID: GPSID
+        - generatedID: generatedID
+          pictureID: pictureID
+          biometricID: biometricID
+          GPSID: GPSID
+        clockInTime: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        userID:
+          type: string
+        businessID:
+          type: string
+        clockInTime:
+          format: date-time
+          type: string
+        clockOutTime:
+          format: date-time
+          type: string
+        isAutoClockedIn:
+          type: boolean
+        isAutoClockedOut:
+          type: boolean
+        ClockInProof:
+          items:
+            $ref: '#/components/schemas/ClockInProof'
+          type: array
+      required:
+      - ClockInProof
+      - businessID
+      - clockInTime
+      - clockOutTime
+      - id
+      - isAutoClockedIn
+      - isAutoClockedOut
+      - userID
+      title: ClockIn
+      type: object
+    ClockInProof:
+      example:
+        generatedID: generatedID
+        pictureID: pictureID
+        biometricID: biometricID
+        GPSID: GPSID
+      properties:
+        pictureID:
+          description: A ID to a picture taken and uploaded to our servers
+          type: string
+        generatedID:
+          description: A ID generated by a device at the location, can be followed
+            by coworkers coperating
+          type: string
+        GPSID:
+          type: string
+        biometricID:
+          type: string
+      title: ClockInProof
+      type: object
+    Attendance:
+      properties:
+        Clockins:
+          items:
+            $ref: '#/components/schemas/ClockIn'
+          type: array
+        Flags:
+          items:
+            $ref: '#/components/schemas/ClockinFlag'
+          type: array
+      title: Attendance
+      type: object
+    ClockinFlag:
+      properties:
+        id:
+          type: string
+        clockingID:
+          type: string
+        type:
+          enum:
+          - tamper alarm tripped
+          - too long to respond
+          - possible intreception
+          - other
+          type: string
+        reason:
+          type: string
+      required:
+      - clockingID
+      - id
+      - reason
+      - type
+      title: ClockinFlag
+      type: object
+    ClockinForm:
+      properties:
+        businessID:
+          type: string
+        clockinTime:
+          format: date-time
+          type: string
+        clockoutTime:
+          format: date-time
+          type: string
+        clockinProof:
+          items:
+            $ref: '#/components/schemas/ClockInProof'
+          type: array
+      required:
+      - businessID
+      - clockinTime
+      - clockoutTime
+      title: ClockinForm
+      type: object
+    inline_object:
+      properties:
+        file:
+          format: binary
+          type: string
+      type: object
+    inline_response_201:
+      example:
+        ID: ID
+      properties:
+        ID:
+          type: string
+    inline_object_1:
+      properties:
+        X:
+          type: number
+        Y:
+          type: number
+        Z:
+          type: number
+      type: object
+    inline_object_2:
+      properties:
+        type:
+          enum:
+          - fingerprint
+          - iris
+          type: string
+        data:
+          format: binary
+          type: string
+      type: object

@@ -1,0 +1,143 @@
+openapi: 3.0.0
+info:
+  title: business_service
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /business/form:
+    post:
+      summary: ''
+      operationId: post-business-form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              title: BusinessForm
+              type: object
+              properties:
+                name:
+                  type: string
+                location:
+                  type: string
+                userIDs:
+                  type: array
+                  description: A array of users who can modify this business
+                  uniqueItems: true
+                  minItems: 1
+                  items:
+                    type: string
+              required:
+                - name
+                - location
+                - userIDs
+      description: Create a new buiness from a business form
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+  '/business/{ID}':
+    get:
+      summary: Get business by id
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: Business
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: The ID used to identify this business
+                  '':
+                    type: string
+                  userIDs:
+                    type: array
+                    uniqueItems: true
+                    minItems: 1
+                    items:
+                      type: string
+                required:
+                  - id
+                  - ''
+                  - userIDs
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-business
+      description: Get a business by id
+    parameters:
+      - schema:
+          type: string
+        name: ID
+        in: path
+        required: true
+  '/business/{ID}/replace':
+    put:
+      summary: Put business by id
+      operationId: put-business-replace
+      responses:
+        '202':
+          description: Accepted
+        '400':
+          description: Bad Request
+          headers: {}
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      description: ''
+    parameters:
+      - schema:
+          type: string
+        name: ID
+        in: path
+        required: true
+components:
+  schemas:
+    Business:
+      title: Business
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID used to identify this business
+        '':
+          type: string
+        userIDs:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            type: string
+      required:
+        - id
+        - ''
+        - userIDs
+    BusinessForm:
+      title: BusinessForm
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        userIDs:
+          type: array
+          description: A array of users who can modify this business
+          uniqueItems: true
+          minItems: 1
+          items:
+            type: string
+      required:
+        - name
+        - location
+        - userIDs
+  securitySchemes: {}

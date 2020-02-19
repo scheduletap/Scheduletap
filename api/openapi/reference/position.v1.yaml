@@ -1,0 +1,97 @@
+openapi: 3.0.0
+info:
+  title: position
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  /shift/form:
+    post:
+      summary: ''
+      operationId: post-position-form
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftForm'
+    parameters: []
+  '/shift/{ID}':
+    parameters:
+      - schema:
+          type: string
+        name: ID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-business-ID
+  '/shift/{ID}/replace':
+    parameters:
+      - schema:
+          type: string
+        name: ID
+        in: path
+        required: true
+    put:
+      summary: ''
+      operationId: put-business-ID-replace
+      responses:
+        '200':
+          description: OK
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftForm'
+components:
+  schemas:
+    Shift:
+      title: Shift
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        location:
+          type: string
+        description:
+          type: string
+        businessID:
+          type: string
+        startTime:
+          type: string
+          format: time
+        shiftLength:
+          type: integer
+          multipleOf: 15
+      required:
+        - id
+        - name
+        - businessID
+        - startTime
+        - shiftLength
+    ShiftForm:
+      title: ShiftForm
+      type: object
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        description:
+          type: string
+        startTime:
+          type: string
+          format: time
+        shiftLength:
+          type: integer
+      required:
+        - name
+        - startTime
+        - shiftLength

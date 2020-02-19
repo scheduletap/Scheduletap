@@ -1,0 +1,47 @@
+{
+    "version": 2,
+    "extra_config": {
+      "github_com/devopsfaith/krakend-gologging": {
+        "level": "ERROR",
+        "prefix": "[KRAKEND]",
+        "syslog": false,
+        "stdout": true,
+        "format": "logstash"
+      },
+      "github_com/devopsfaith/krakend-logstash": {
+        "enabled": true
+      }
+    },
+    "timeout": "3000ms",
+    "cache_ttl": "300s",
+    "output_encoding": "json",
+    "name": "Test service",
+    "endpoints": [
+      {
+        "endpoint": "/test",
+        "method": "GET",
+        "extra_config": {
+          "github.com/devopsfaith/krakend-ratelimit/juju/router": {
+            "maxRate": 0,
+            "clientMaxRate": 0,
+            "strategy": "ip"
+          }
+        },
+        "output_encoding": "json",
+        "concurrent_calls": 1,
+        "backend": [
+          {
+            "url_pattern": "/",
+            "encoding": "json",
+            "sd": "static",
+            "extra_config": {},
+            "method": "GET",
+            "host": [
+              "https://testservice"
+            ],
+            "disable_host_sanitize": false
+          }
+        ]
+      }
+    ]
+  }

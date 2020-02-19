@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: business_service
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /business/form:
+    post:
+      description: Create a new buiness from a business form
+      operationId: post-business-form
+      requestBody:
+        $ref: '#/components/requestBodies/BusinessForm_1'
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                location:
+                  type: string
+                userIDs:
+                  description: A array of users who can modify this business
+                  items:
+                    type: string
+                  minItems: 1
+                  type: array
+                  uniqueItems: true
+              required:
+              - location
+              - name
+              - userIDs
+              title: BusinessForm
+              type: object
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+  /business/{ID}:
+    get:
+      description: Get a business by id
+      operationId: get-business
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Business_1'
+          description: OK
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Get business by id
+      tags: []
+  /business/{ID}/replace:
+    put:
+      operationId: put-business-replace
+      parameters:
+      - explode: false
+        in: path
+        name: ID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Put business by id
+components:
+  requestBodies:
+    BusinessForm_1:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BusinessForm_1'
+  schemas:
+    Business:
+      properties:
+        id:
+          description: The ID used to identify this business
+          type: string
+        ? ""
+        : type: string
+        userIDs:
+          items:
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+      required:
+      - ""
+      - id
+      - userIDs
+      title: Business
+      type: object
+    BusinessForm:
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        userIDs:
+          description: A array of users who can modify this business
+          items:
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+      required:
+      - location
+      - name
+      - userIDs
+      title: BusinessForm
+      type: object
+    BusinessForm_1:
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        userIDs:
+          description: A array of users who can modify this business
+          items:
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+      required:
+      - location
+      - name
+      - userIDs
+      title: BusinessForm
+      type: object
+    Business_1:
+      example:
+        ? ""
+        : ""
+        userIDs:
+        - userIDs
+        - userIDs
+        id: id
+      properties:
+        id:
+          description: The ID used to identify this business
+          type: string
+        ? ""
+        : type: string
+        userIDs:
+          items:
+            type: string
+          minItems: 1
+          type: array
+          uniqueItems: true
+      required:
+      - ""
+      - id
+      - userIDs
+  securitySchemes: {}
