@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: holiday
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/holiday/{businessID}/form':
+    parameters:
+      - schema:
+          type: string
+        name: businessID
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-holiday-businessID-form
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Holiday'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HolidayForm'
+        description: ''
+  '/holiday/{holidayID}/approve':
+    parameters:
+      - schema:
+          type: string
+        name: holidayID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-holiday-holidayID-approve
+  '/holiday/{holidayID}/deny':
+    parameters:
+      - schema:
+          type: string
+        name: holidayID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-holiday-holidayID-deny
+  '/holiday/{holidayID}/cancel':
+    parameters:
+      - schema:
+          type: string
+        name: holidayID
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-holiday-holidayID-cancel
+components:
+  schemas:
+    Holiday:
+      title: Holiday
+      type: object
+      properties:
+        id:
+          type: string
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        businessID:
+          type: string
+        userID:
+          type: string
+        message:
+          type: string
+        requestDate:
+          type: string
+          format: date-time
+        requestStatus:
+          type: string
+          default: Limbo
+          enum:
+            - Accepted
+            - Denied
+            - Cancelled
+            - Swapped
+            - Limbo
+      required:
+        - id
+        - startDate
+        - endDate
+        - businessID
+        - userID
+        - requestDate
+        - requestStatus
+    HolidayForm:
+      title: HolidayForm
+      type: object
+      properties:
+        startDate:
+          type: string
+          format: date-time
+        endDate:
+          type: string
+          format: date-time
+        message:
+          type: string
+      required:
+        - startDate
+        - endDate
+        - message

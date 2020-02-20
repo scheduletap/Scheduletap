@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: message
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/message/{BusinessID}/form':
+    parameters:
+      - schema:
+          type: string
+        name: BusinessID
+        in: path
+        required: true
+    post:
+      summary: ''
+      operationId: post-message-BusinessID-form
+      responses:
+        '201':
+          description: Created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageForm'
+  '/message/{MessageID}':
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-message-MessageID
+    parameters:
+      - schema:
+          type: string
+        name: MessageID
+        in: path
+        required: true
+  /message/all:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
+      operationId: get-message-all
+      parameters:
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+            default: '100'
+          in: query
+          name: amount
+          description: a amount between 1-100 of the latest messages for the authorised user
+        - schema:
+            type: string
+          in: query
+          name: after
+          description: A datetime the returned messages must be after
+        - schema:
+            type: string
+          in: query
+          name: before
+          description: a datetime the returned messages must be before
+        - schema:
+            type: string
+          in: query
+          name: fromUserID
+          description: Filter messages only from this user
+components:
+  schemas:
+    Message:
+      title: Message
+      type: object
+      properties:
+        id:
+          type: string
+        fromUserID:
+          type: string
+        toUserID:
+          type: string
+        content:
+          type: string
+        creation:
+          type: string
+          format: date-time
+        toBusinessGroupID:
+          type: string
+      required:
+        - id
+        - content
+    MessageForm:
+      title: MessageForm
+      type: object
+      properties:
+        toUserID:
+          type: string
+        toBusinessID:
+          type: string
+        content:
+          type: string
+        creation:
+          type: string
+          format: date-time
