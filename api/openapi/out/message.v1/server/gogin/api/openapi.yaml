@@ -1,0 +1,152 @@
+openapi: 3.0.0
+info:
+  title: message
+  version: "1.0"
+servers:
+- url: http://localhost:3000
+paths:
+  /message/{BusinessID}/form:
+    post:
+      operationId: post-message-BusinessID-form
+      parameters:
+      - explode: false
+        in: path
+        name: BusinessID
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageForm'
+      responses:
+        "201":
+          description: Created
+  /message/{MessageID}:
+    get:
+      operationId: get-message-MessageID
+      parameters:
+      - explode: false
+        in: path
+        name: MessageID
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Your GET endpoint
+      tags: []
+  /message/all:
+    get:
+      operationId: get-message-all
+      parameters:
+      - description: a amount between 1-100 of the latest messages for the authorised
+          user
+        explode: true
+        in: query
+        name: amount
+        required: false
+        schema:
+          default: "100"
+          maxLength: 100
+          minLength: 1
+          type: string
+        style: form
+      - description: A datetime the returned messages must be after
+        explode: true
+        in: query
+        name: after
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: a datetime the returned messages must be before
+        explode: true
+        in: query
+        name: before
+        required: false
+        schema:
+          type: string
+        style: form
+      - description: Filter messages only from this user
+        explode: true
+        in: query
+        name: fromUserID
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Message'
+                type: array
+          description: OK
+        "400":
+          description: Bad Request
+        "404":
+          description: Not Found
+        "500":
+          description: Internal Server Error
+      summary: Your GET endpoint
+      tags: []
+components:
+  schemas:
+    Message:
+      example:
+        fromUserID: fromUserID
+        toBusinessGroupID: toBusinessGroupID
+        id: id
+        toUserID: toUserID
+        content: content
+        creation: 2000-01-23T04:56:07.000+00:00
+      properties:
+        id:
+          type: string
+        fromUserID:
+          type: string
+        toUserID:
+          type: string
+        content:
+          type: string
+        creation:
+          format: date-time
+          type: string
+        toBusinessGroupID:
+          type: string
+      required:
+      - content
+      - id
+      title: Message
+      type: object
+    MessageForm:
+      example:
+        toBusinessID: toBusinessID
+        toUserID: toUserID
+        content: content
+        creation: 2000-01-23T04:56:07.000+00:00
+      properties:
+        toUserID:
+          type: string
+        toBusinessID:
+          type: string
+        content:
+          type: string
+        creation:
+          format: date-time
+          type: string
+      title: MessageForm
+      type: object

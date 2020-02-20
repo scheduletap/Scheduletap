@@ -9,17 +9,13 @@
 
 package openapi
 
-type Position struct {
-
-	Id string `json:"id"`
+type ShiftForm struct {
 
 	Name string `json:"name"`
 
 	Location string `json:"location,omitempty"`
 
 	Description string `json:"description,omitempty"`
-
-	BusinessID string `json:"businessID"`
 
 	StartTime string `json:"startTime"`
 

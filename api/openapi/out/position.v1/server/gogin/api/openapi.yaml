@@ -5,13 +5,18 @@ info:
 servers:
 - url: http://localhost:3000
 paths:
-  /position/form:
+  /shift/form:
     post:
       operationId: post-position-form
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftForm'
       responses:
         "200":
           description: OK
-  /position/{ID}:
+  /shift/{ID}:
     get:
       operationId: get-business-ID
       parameters:
@@ -25,7 +30,7 @@ paths:
       responses: {}
       summary: Your GET endpoint
       tags: []
-  /position/{ID}/replace:
+  /shift/{ID}/replace:
     put:
       operationId: put-business-ID-replace
       parameters:
@@ -36,12 +41,17 @@ paths:
         schema:
           type: string
         style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftForm'
       responses:
         "200":
           description: OK
 components:
   schemas:
-    Position:
+    Shift:
       properties:
         id:
           type: string
@@ -65,9 +75,15 @@ components:
       - name
       - shiftLength
       - startTime
-      title: Position
+      title: Shift
       type: object
-    PositionForm:
+    ShiftForm:
+      example:
+        name: name
+        description: description
+        shiftLength: 0
+        location: location
+        startTime: startTime
       properties:
         name:
           type: string
@@ -84,5 +100,5 @@ components:
       - name
       - shiftLength
       - startTime
-      title: PositionFOrm
+      title: ShiftForm
       type: object
