@@ -1,3 +1,5 @@
 docker run --rm -v C:\Users\John\Desktop\scheduletap\api\openapi:/local openapitools/openapi-generator-cli generate -i /local/reference/position.v1.yaml -g go-gin-server -o /local/out/position.v1/server/gogin
 docker run --rm -v C:\Users\John\Desktop\scheduletap\api\openapi:/local openapitools/openapi-generator-cli generate -i /local/reference/attendance.v1.yaml -g go-gin-server -o /local/out/attendance.v1/server/gogin
 docker run --rm -v C:\Users\John\Desktop\scheduletap\api\openapi:/local openapitools/openapi-generator-cli generate -i /local/reference/business.v1.yaml -g go-gin-server -o /local/out/business.v1/server/gogin
+docker run --rm -v C:\Users\John\Desktop\scheduletap\api\openapi:/local openapitools/openapi-generator-cli generate -i /local/reference/holiday.v1.yaml -g go-gin-server -o /local/out/holiday.v1/server/gogin
+docker run --rm -v C:\Users\John\Desktop\scheduletap\api\openapi:/local openapitools/openapi-generator-cli generate -i /local/reference/message.v1.yaml -g go-gin-server -o /local/out/message.v1/server/gogin
